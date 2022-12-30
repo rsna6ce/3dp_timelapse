@@ -20,7 +20,9 @@ def video():
     file_and_dirs = os.listdir(frames_basedir)
     frames_dirs = [f for f in file_and_dirs if os.path.isdir(os.path.join(frames_basedir, f))]
     frames_dirs.sort()
-    selected_dir = frames_dirs[-1]
+    selected_dir=''
+    if len(frames_dirs)>0:
+        selected_dir = frames_dirs[-1]
 
     if param['video_dir']=='{DEFAULT}':
         video_basedir=web_ui_path + '/../captured/videos'
@@ -29,7 +31,9 @@ def video():
     file_and_dirs = os.listdir(video_basedir)
     videos_files = [f for f in file_and_dirs if os.path.isfile(os.path.join(video_basedir, f)) and f!='.git_keep']
     videos_files.sort()
-    selected_file = frames_dirs[-1]
+    selected_file = ''
+    if len(frames_dirs)>0:
+        selected_file = frames_dirs[-1]
     
     if not inner_status.encode_running:
         inner_status.encode_frame_rate = param['video_default_frame_rate']
@@ -45,6 +49,8 @@ def video():
 def encode_trigger():
     frames_dir = request.form.get('frames_dir','')
     frame_rate = request.form.get('frame_rate', 10, type=int)
+    if frames_dir=='':
+        return redirect(url_for('video'))
     trigger = request.form.get('trigger', '')
     if trigger == 'encode':
         encode_thread.queue.put({'frames_dir':frames_dir, 'frame_rate':frame_rate})
@@ -68,6 +74,8 @@ def encode_status():
 def video_trigger():
     videos_file = request.form.get('videos_file','')
     trigger = request.form.get('trigger', '')
+    if videos_file=='':
+        return redirect(url_for('video'))
     if trigger == 'remove':
         print('remove', videos_file)
         if param['video_dir']=='{DEFAULT}':
