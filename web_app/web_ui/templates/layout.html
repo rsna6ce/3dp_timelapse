@@ -1,0 +1,42 @@
+<!doctype html>
+<title>3dp_capture</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+<script src="{{ url_for('static', filename='jquery-3.5.1.slim.min.js') }}"></script>
+<script src="{{ url_for('static', filename='popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='howler.min.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='image/favicon.ico') }}">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0 " >
+
+<div class="container">
+    <div class="row" style="padding:0px;">
+        <div class="col-lg-12 col-sm-12" style="padding:0px;">
+            <div class="form-group " style="padding:0px;">
+                <nav class="navbar navbar-expand-sm navbar-light navbar-right bg-light w-100" style="padding:0px;">
+                    {% if navi_title != 'menu' %}
+                    <a href="{{ url_for('menu') }}?return_menu=yes" class="navbar-brand">
+                        <img src="{{ url_for('static', filename='image/home_icon.png')}}" width="30" height="30" alt="">
+                    </a>
+                    {% endif %}
+                </nav>
+
+                {% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="alert alert-{{category}} w-100" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="block-body" style="padding-top:0px;padding-bottom:0px;">
+                {% if navi_title != 'menu' %}
+                <font size="5"><strong>{{navi_title}}</strong></font>
+                {% endif %}
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="border rounded w-100" style="padding:5px;">
+    <div class="form-group">
+        <form action="{{ url_for('encode_trigger') }}" method=post name="encode_trigger">
+            <div class="row" style="padding:10px;">
+                <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                    <label class="label">Captured frames :&ensp;</label>
+                    <select id="frames_dir" name="frames_dir" class="form-control">
+                        {% for frames_dir in frames_dirs %}
+                            <option value={{frames_dir}}  {{ 'selected' if frames_dir == selected_dir else '' }}>{{frames_dir}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="padding:10px;">
+                <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                    <label class="label">Encode frame rate :</label>
+                    <div class="form-inline">
+                        <input class="form-input" type="number" id="frame_rate" name="frame_rate" style="width:70px;" min="0" value="{{encode_frame_rate}}">
+                        <label class="label">&ensp;fps</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding:10px;padding-bottom:0px;">
+                <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                    <button {{start_enable}} type="submit" class="btn btn-primary w-100 h-100" name="trigger" value="encode" id="button_encode">
+                        <span>Start encode</span>
+                    </button>
+                </div>
+                <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                    <button {{start_enable}} type="submit" class="btn btn-primary w-100 h-100" name="trigger" value="remove" id="button_remove_frames" onclick="return confirm_trigger('Remove captured frames ')">
+                        <span>Remove captured frames</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<center><font size="5">▼</font></center>
+
+<div class="border rounded w-100" style="padding:5px;">
+    <div class="form-group">
+        <form action="{{ url_for('video_trigger') }}" method=post name="video_trigger">
+        <div class="row" style="padding:10px;">
+            <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                <label class="label">Encoded videos :&ensp;</label>
+                <select id="videos_file" name="videos_file" class="form-control">
+                    {% for videos_file in videos_files %}
+                        <option value={{videos_file}}  {{ 'selected' if videos_file == selected_file else '' }}>{{videos_file}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row" style="padding:10px;padding-bottom:0px;">
+            <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                <button type="button" class="btn btn-primary w-100 h-100" id="button_start" onclick="video_download();">
+                    <span>Download</span>
+                </button>
+            </div>
+            <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                <button type="submit" class="btn btn-primary w-100 h-100" name="trigger" value="remove" id="button_remove_video" onclick="return confirm_trigger('Remove encoded video ')">
+                    <span>Remove captured frames</span>
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<script language="javascript" type="text/javascript">
+    function confirm_trigger(msg) {
+        let result = window.confirm(msg + 'OK ?');
+        return result;
+    };
+    function video_download() {
+        const elm = document.getElementById("videos_file")
+        const idx = elm.selectedIndex;
+        const val = elm.options[idx].value;
+        const link = document.createElement('a')
+        link.download = val
+        link.href = "{{url_for('video_download')}}" + "?filename="+ val
+        link.click()
+    };
+</script>
+{% endblock %}

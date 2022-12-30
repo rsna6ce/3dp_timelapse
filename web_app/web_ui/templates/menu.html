@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <div class="text-center"  onclick="playsound_title()"><font size="7"><strong>3dp_capture</strong></font></div>
+    <br>
+    <div><button type="button" class="btn btn-primary w-100 padding-bottom: 10 font-size:2rem" id="capture"  onclick="location.href='{{ url_for('capture') }}'"><font size="4"><img src="{{ url_for('static', filename='image/video.svg')}}" style="padding-right:20px">Capture&ensp;&ensp;</font></button></div>
+    <br>
+    <div><button type="button" class="btn btn-primary w-100 padding-bottom: 10 font-size:2rem" id="video"  onclick="location.href='{{ url_for('video') }}'"><font size="4"><img src="{{ url_for('static', filename='image/film.svg')}}" style="padding-right:20px">Video&ensp;&emsp;&ensp;</font></button></div>
+    <br>
+    <div><button type="button" class="btn btn-primary w-100 padding-bottom: 10 font-size:2rem" id="settings"  onclick="location.href='{{ url_for('settings') }}'"><font size="4"><img src="{{ url_for('static', filename='image/settings.svg')}}" style="padding-right:20px">Settings&ensp;&ensp;</font></button></div>
+
+{% endblock %}
