@@ -26,12 +26,12 @@
             <div class="row" style="padding:10px;padding-bottom:0px;">
                 <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                     <button {{start_enable}} type="submit" class="btn btn-primary w-100 h-100" name="trigger" value="encode" id="button_encode">
-                        <span>Start encode</span>
+                        <span>Encode</span>
                     </button>
                 </div>
                 <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                     <button {{start_enable}} type="submit" class="btn btn-primary w-100 h-100" name="trigger" value="remove" id="button_remove_frames" onclick="return confirm_trigger('Remove captured frames ')">
-                        <span>Remove captured frames</span>
+                        <span>Remove</span>
                     </button>
                 </div>
             </div>
@@ -39,7 +39,14 @@
     </div>
 </div>
 
-<center><font size="5">▼</font></center>
+<center>
+<div id="encoding_spnner_block" style="display:none">
+    <br>
+    <span class="spinner-border spinner-border-lg text-primary" role="status" aria-hidden="true" ></span>
+    <br>
+</div>
+<font size="5">▼</font>
+</center>
 
 <div class="border rounded w-100" style="padding:5px;">
     <div class="form-group">
@@ -62,7 +69,7 @@
             </div>
             <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                 <button type="submit" class="btn btn-primary w-100 h-100" name="trigger" value="remove" id="button_remove_video" onclick="return confirm_trigger('Remove encoded video ')">
-                    <span>Remove captured frames</span>
+                    <span>Remove</span>
                 </button>
             </div>
         </div>
@@ -83,5 +90,31 @@
         link.href = "{{url_for('video_download')}}" + "?filename="+ val
         link.click()
     };
+    var encode_running_prev = false;
+    function UpdateStatusPoling() {
+        let request = new XMLHttpRequest();
+        request.open('GET', "{{url_for('encode_status')}}", true);
+        request.responseType = 'json';
+        request.onload = function () {
+            let data = this.response;
+            if (data.encode_running!=encode_running_prev) {
+                encode_running_prev = data.encode_running;
+                if (data.encode_running == false) {
+                    // encode finished then reload page
+                    window.location.href = '{{url_for('video')}}';
+                }
+            }
+            document.getElementById("encoding_spnner_block").style.display = data.encode_running ? "block" :"none";
+            setTimeout(UpdateStatusPoling, 1000);
+        };
+        request.onerror = function () {
+            alert('ERROR: Communication error. Prease go back to the menu');
+        }
+        request.send();
+    }
+    function load() {
+      UpdateStatusPoling();
+    }
+    window.onload = load;
 </script>
 {% endblock %}

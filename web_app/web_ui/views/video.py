@@ -5,7 +5,7 @@ import queue
 import cv2
 import subprocess
 import shutil
-from flask import request, redirect, url_for, render_template, flash, make_response
+from flask import request, redirect, url_for, render_template, flash, make_response, jsonify
 from web_ui import app
 from web_ui import inner_status
 from web_ui import param
@@ -57,6 +57,13 @@ def encode_trigger():
         shutil.rmtree(frames_basedir+'/'+frames_dir)
     return redirect(url_for('video'))
 
+@app.route('/encode/status')
+def encode_status():
+    return jsonify({
+        'encode_running' : inner_status.encode_running,
+        'encode_job_name' : inner_status.encode_job_name})
+
+
 @app.route('/video/trigger', methods=['POST'])
 def video_trigger():
     videos_file = request.form.get('videos_file','')
@@ -69,6 +76,7 @@ def video_trigger():
             video_basedir = param['video_dir']
         os.remove(video_basedir+'/'+videos_file)
     return redirect(url_for('video'))
+
 
 @app.route('/video/download', methods=['GET'])
 def video_download():
@@ -100,6 +108,8 @@ class EncodeThread(threading.Thread):
                 job = self.queue.get()
                 frames_dir = job['frames_dir']
                 frame_rate = job['frame_rate']
+                inner_status.encode_running = True
+                inner_status.encode_job_name = frames_dir
                 if param['capture_dir']=='{DEFAULT}':
                     frames_basedir=web_ui_path + '/../captured/frames'
                 else:
@@ -124,6 +134,8 @@ class EncodeThread(threading.Thread):
                     '-vcodec', 'libx264',
                     '-r', str(frame_rate),
                     '{}/{}.mp4'.format(video_basedir, frames_dir)))
+            else:
+                inner_status.encode_running = False
             if self.stop_event.is_set():
                 break
             time.sleep(0.5)
