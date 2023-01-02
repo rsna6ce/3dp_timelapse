@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="border rounded w-100" style="padding:5px;">
+    <div class="form-group">
+        <div class="row" style="padding:10px;">
+            <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                <button type="button" class="btn btn-primary w-100 h-100" name="trigger" value="encode" id="button_encode" onclick="reset_server()")>
+                    <span>Reset server</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    function reset_server() {
+        let result = window.confirm('server reset OK ?');
+        if (result) {
+            let request = new XMLHttpRequest();
+            request.open('POST', "{{url_for('reset_server')}}", true);
+            request.responseType = 'json';
+            request.onload = function () {
+                window.location.href = '{{url_for('menu')}}';
+            };
+            request.onerror = function () {
+                window.location.href = '{{url_for('menu')}}';
+            }
+            request.send();
+        }
+    }
+</script>
+{% endblock %}

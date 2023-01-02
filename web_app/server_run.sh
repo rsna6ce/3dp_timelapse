@@ -8,5 +8,5 @@ sleep 10s
 while :
 do
   python3 server.py
-  sleep 3s
+  sleep 1s
 done
