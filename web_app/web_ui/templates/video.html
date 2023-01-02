@@ -42,7 +42,8 @@
 <center>
 <div id="encoding_spnner_block" style="display:none">
     <br>
-    <span class="spinner-border spinner-border-lg text-primary" role="status" aria-hidden="true" ></span>
+    <span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true" ></span>
+    <label class="label" id="encoding_jobinfo"></label>
     <br>
 </div>
 <font size="5">▼</font>
@@ -105,6 +106,7 @@
                 }
             }
             document.getElementById("encoding_spnner_block").style.display = data.encode_running ? "block" :"none";
+            document.getElementById("encoding_jobinfo").innerHTML = data.encode_job_name + " (" + data.encode_job_framerate+ "fps)";
             setTimeout(UpdateStatusPoling, 1000);
         };
         request.onerror = function () {

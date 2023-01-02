@@ -67,7 +67,8 @@ def encode_trigger():
 def encode_status():
     return jsonify({
         'encode_running' : inner_status.encode_running,
-        'encode_job_name' : inner_status.encode_job_name})
+        'encode_job_name' : inner_status.encode_job_name,
+        'encode_job_framerate' : inner_status.encode_job_framerate})
 
 
 @app.route('/video/trigger', methods=['POST'])
@@ -118,6 +119,7 @@ class EncodeThread(threading.Thread):
                 frame_rate = job['frame_rate']
                 inner_status.encode_running = True
                 inner_status.encode_job_name = frames_dir
+                inner_status.encode_job_framerate = frame_rate
                 if param['capture_dir']=='{DEFAULT}':
                     frames_basedir=web_ui_path + '/../captured/frames'
                 else:

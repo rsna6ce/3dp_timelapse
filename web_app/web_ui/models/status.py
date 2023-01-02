@@ -12,5 +12,6 @@ class Status():
         self.capture_next_datetime = None
         self.capture_count = 0
         self.encode_running = False
-        self.encode_job_name = '',
+        self.encode_job_name = ''
+        self.encode_job_framerate = 0
         self.encode_framerate = 10
