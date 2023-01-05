@@ -32,8 +32,8 @@ def video():
     videos_files = [f for f in file_and_dirs if os.path.isfile(os.path.join(video_basedir, f)) and f!='.git_keep']
     videos_files.sort()
     selected_file = ''
-    if len(frames_dirs)>0:
-        selected_file = frames_dirs[-1]
+    if len(videos_files)>0:
+        selected_file = videos_files[-1]
     
     if not inner_status.encode_running:
         inner_status.encode_frame_rate = param['video_default_frame_rate']
