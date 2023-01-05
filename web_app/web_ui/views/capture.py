@@ -162,7 +162,6 @@ class CaptureThread(threading.Thread):
 
             else:
                 self.autostop_no_motion_count = 0
-                self.curr_img_captured = False
                 if self.stop_event.is_set():
                     break
 
