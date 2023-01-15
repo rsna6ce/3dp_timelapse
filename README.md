@@ -1,4 +1,5 @@
 # 3dp_timelapse
+![image](image/image.gif)
 ## concept
   * Capturing with simple operations
   * Capturing with USB camera
