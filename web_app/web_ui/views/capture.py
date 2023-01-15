@@ -35,7 +35,8 @@ def capture_status():
     return jsonify({
         'capture_running' : inner_status.capture_running,
         'capture_started_datetime' : inner_status.capture_started_datetime.strftime('%Y/%m/%d-%H:%M:%S') if inner_status.capture_running else '',
-        'capture_count' : inner_status.capture_count})
+        'capture_count' : inner_status.capture_count,
+        'capture_motion_score': inner_status.capture_motion_score})
 
 @app.route("/video_feed")
 def video_feed():
@@ -73,16 +74,19 @@ def capture_trigger():
         inner_status.capture_interval_sec = capture_interval_sec
         inner_status.capture_autostop_timer_sec = int(autostop_timer_hour)*3600 + int(autostop_timer_minute)*60
         inner_status.capture_autostop_no_motion = (autostop_no_motion_enable=='on')
+        inner_status.capture_motion_score = 0.0
+        inner_status.captuure_first_motion_waiting = (autostop_no_motion_enable=='on')
     else:
         inner_status.capture_running = False
         inner_status.capture_job_name = ''
         inner_status.capture_job_dir = ''
         inner_status.capture_interval_sec = 0
         inner_status.capture_autostop_timer_sec = 0
-        inner_status.capture_autostop_no_motion = False
         inner_status.capture_started_datetime = None
         inner_status.capture_next_datetime = None
         inner_status.capture_count = 0
+        inner_status.capture_motion_score = 0.0
+        inner_status.captuure_first_motion_waiting = False
 
     inner_status.capture_running = capture_running
     return redirect(url_for('capture'))
@@ -95,6 +99,7 @@ class CaptureThread(threading.Thread):
         self.curr_img = None
         self.prev_img = None
         self.autostop_no_motion_count = 0
+        self.motion_capture_count = 0
 
     def stop(self):
         self.stop_event.set()
@@ -106,26 +111,35 @@ class CaptureThread(threading.Thread):
 
                 # capture interval
                 if inner_status.capture_next_datetime < dt_now:
-                    inner_status.capture_next_datetime = dt_now + timedelta(seconds=inner_status.capture_interval_sec)
                     frame = camera.Camera().get_frame()
-                    with open('{}/{}.{}'.format(
-                        inner_status.capture_job_dir, str(inner_status.capture_count).zfill(8), 'jpg'), "wb") as f:
-                        f.write(frame)
-                    inner_status.capture_count += 1
+                    if inner_status.captuure_first_motion_waiting:
+                        # waiting with auto stop no motion
+                        inner_status.capture_next_datetime = dt_now + timedelta(seconds=1)
+                    else:
+                        inner_status.capture_next_datetime = dt_now + timedelta(seconds=inner_status.capture_interval_sec)
+                        with open('{}/{}.{}'.format(
+                            inner_status.capture_job_dir, str(inner_status.capture_count).zfill(8), 'jpg'), "wb") as f:
+                            f.write(frame)
+                        inner_status.capture_count += 1
 
                     # auto stop no motion
                     if inner_status.capture_autostop_no_motion:
                         # cache prev frame
-                        if inner_status.capture_count > 1:
+                        if self.motion_capture_count > 0:
                             self.prev_img = self.curr_img.copy()
                         # current frame decode jpg->cvmat
                         img_buf = np.frombuffer(frame, dtype=np.uint8)
                         self.curr_img = cv2.imdecode(img_buf, cv2.IMREAD_GRAYSCALE)
+                        self.motion_capture_count += 1
                         #compare prev-curr frames
-                        if inner_status.capture_count > 1:
+                        if self.motion_capture_count > 1:
                             score = self.compare_prev_frame(self.curr_img, self.prev_img)
+                            inner_status.capture_motion_score = score
+                            if param['capture_autostop_first_motion_threshold'] < score:
+                                inner_status.captuure_first_motion_waiting = False
                             print("compare score", score)
-                            if score < param['capture_autostop_no_motion_threshold_score']:
+                            if (score < param['capture_autostop_no_motion_threshold_score'] and
+                                inner_status.captuure_first_motion_waiting == False):
                                 print("no-motion detected.")
                                 self.autostop_no_motion_count += 1
                                 # consecutively exceed the threshold
@@ -147,6 +161,7 @@ class CaptureThread(threading.Thread):
 
             else:
                 self.autostop_no_motion_count = 0
+                self.motion_capture_count = 0
                 if self.stop_event.is_set():
                     break
 
