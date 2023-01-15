@@ -82,7 +82,6 @@ def capture_trigger():
         inner_status.capture_job_dir = ''
         inner_status.capture_interval_sec = 0
         inner_status.capture_autostop_timer_sec = 0
-        inner_status.capture_autostop_no_motion = False
         inner_status.capture_started_datetime = None
         inner_status.capture_next_datetime = None
         inner_status.capture_count = 0
@@ -162,6 +161,7 @@ class CaptureThread(threading.Thread):
 
             else:
                 self.autostop_no_motion_count = 0
+                self.motion_capture_count = 0
                 if self.stop_event.is_set():
                     break
 
