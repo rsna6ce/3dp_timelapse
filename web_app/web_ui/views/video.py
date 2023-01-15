@@ -23,6 +23,11 @@ def video():
     selected_dir=''
     if len(frames_dirs)>0:
         selected_dir = frames_dirs[-1]
+        #add frame count
+        for i in range(len(frames_dirs)):
+            frames_dir = frames_dirs[i]
+            frames_path = frames_basedir + '/' + frames_dir
+            frames_dirs[i] = '{} (count: {})'.format(frames_dir, len(os.listdir(frames_path)))
 
     if param['video_dir']=='{DEFAULT}':
         video_basedir=web_ui_path + '/../captured/videos'
@@ -51,6 +56,9 @@ def encode_trigger():
     frame_rate = request.form.get('frame_rate', 10, type=int)
     if frames_dir=='':
         return redirect(url_for('video'))
+    else:
+        # remove frame count
+        frames_dir = frames_dir.split(' ')[0]
     trigger = request.form.get('trigger', '')
     if trigger == 'encode':
         encode_thread.queue.put({'frames_dir':frames_dir, 'frame_rate':frame_rate})
