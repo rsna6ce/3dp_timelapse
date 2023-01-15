@@ -151,7 +151,7 @@ class EncodeThread(threading.Thread):
                     '-vf', 'scale={0}:{1},format=yuv420p'.format(width, height),
                     '-vcodec', 'libx264',
                     '-r', str(frame_rate),
-                    '{}/{}.mp4'.format(video_basedir, frames_dir)))
+                    '{}/{}_{}fps.mp4'.format(video_basedir, frames_dir, frame_rate)))
             else:
                 inner_status.encode_running = False
             if self.stop_event.is_set():
