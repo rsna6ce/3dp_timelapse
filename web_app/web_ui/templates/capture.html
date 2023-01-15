@@ -7,6 +7,16 @@
 <div class="border rounded w-100" style="padding:5px;">
     <div class="form-group">
         <form action="{{ url_for('capture_trigger') }}" method=post name="capture_trigger" onsubmit="return confirm_trigger()">
+            {% if capture_running %}
+            <div class="row" style="padding:10px;">
+                <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                    <label class="label" id="capture_started_datetime">Started:</label> <br>
+                    <label class="label" id="capture_count">Capture count:</label> <br>
+                    <label class="label" id="motion_score">Motion_score:</label>
+                </div>
+            </div>
+            <hr>
+            {% endif %}
             <div class="row" style="padding:10px;">
                 <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                     <label class="label">Capture interval :&ensp;</label>
@@ -35,16 +45,6 @@
                    </div>
                 </div>
             </div>
-            {% if capture_running %}
-            <hr>
-            <div class="row" style="padding:10px;">
-                <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
-                    <label class="label" id="capture_started_datetime">Started:</label> <br>
-                    <label class="label" id="capture_count">Capture count:</label> <br>
-                    <label class="label" id="motion_score">Motion_score:</label>
-                </div>
-            </div>
-            {% endif %}
             <div class="row" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                 <div class="col-6" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                     <button {{start_enable}} type="submit" class="btn btn-primary w-100 h-100" name="trigger" value="start" id="button_start">
@@ -78,7 +78,7 @@
             }
             document.getElementById("capture_started_datetime").innerHTML = "Started: " + data.capture_started_datetime;
             document.getElementById("capture_count").innerHTML = "Capture count: " + data.capture_count;
-            document.getElementById("motion_score").innerHTML = "Motion score: " + Math.round(data.capture_motion_score * 100000) / 100000;
+            document.getElementById("motion_score").innerHTML = "Motion score: " + (Math.round(data.capture_motion_score * 100000) / 100000).toFixed(5);
             setTimeout(UpdateStatusPoling, 1000);
         };
         request.onerror = function () {
