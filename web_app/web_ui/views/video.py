@@ -22,12 +22,12 @@ def video():
     frames_dirs.sort()
     selected_dir=''
     if len(frames_dirs)>0:
-        selected_dir = frames_dirs[-1]
         #add frame count
         for i in range(len(frames_dirs)):
             frames_dir = frames_dirs[i]
             frames_path = frames_basedir + '/' + frames_dir
             frames_dirs[i] = '{} (count: {})'.format(frames_dir, len(os.listdir(frames_path)))
+        selected_dir = frames_dirs[-1]
 
     if param['video_dir']=='{DEFAULT}':
         video_basedir=web_ui_path + '/../captured/videos'
