@@ -10,6 +10,13 @@
                 </button>
             </div>
         </div>
+        <div class="row" style="padding:10px;">
+            <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
+                <button type="button" class="btn btn-primary w-100 h-100" name="trigger" value="encode" id="button_encode" onclick="shutdown_pc()")>
+                    <span>Shutdown PC</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -19,6 +26,21 @@
         if (result) {
             let request = new XMLHttpRequest();
             request.open('POST', "{{url_for('reset_server')}}", true);
+            request.responseType = 'json';
+            request.onload = function () {
+                window.location.href = '{{url_for('menu')}}';
+            };
+            request.onerror = function () {
+                window.location.href = '{{url_for('menu')}}';
+            }
+            request.send();
+        }
+    }
+    function shutdown_pc() {
+        let result = window.confirm('PC shutdown OK ?');
+        if (result) {
+            let request = new XMLHttpRequest();
+            request.open('POST', "{{url_for('shutdown_pc')}}", true);
             request.responseType = 'json';
             request.onload = function () {
                 window.location.href = '{{url_for('menu')}}';
