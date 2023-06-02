@@ -6,9 +6,9 @@
     "camera_format": "MJPG",
     "capture_dir": "{DEFAULT}",
     "capture_default_interval_sec": 60,
-    "capture_autostop_no_motion_threshold_score": 0.0001,
+    "capture_autostop_no_motion_threshold_score": 0.001,
     "capture_autostop_no_motion_threshold_count": 3,
-    "capture_autostop_first_motion_threshold": 0.001,
+    "capture_autostop_first_motion_threshold": 0.05,
     "video_dir": "{DEFAULT}",
     "video_default_frame_rate": 10
 }

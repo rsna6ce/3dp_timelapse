@@ -26,7 +26,11 @@ def video():
         for i in range(len(frames_dirs)):
             frames_dir = frames_dirs[i]
             frames_path = frames_basedir + '/' + frames_dir
-            frames_dirs[i] = '{} (count: {})'.format(frames_dir, len(os.listdir(frames_path)))
+            file_count = len(os.listdir(frames_path))
+            if file_count > 0:
+                frames_dirs[i] = '{} (count: {})'.format(frames_dir, file_count)
+            else:
+                frames_dirs[i] = ''
         selected_dir = frames_dirs[-1]
 
     if param['video_dir']=='{DEFAULT}':

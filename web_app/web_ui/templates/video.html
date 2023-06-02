@@ -9,7 +9,9 @@
                     <label class="label">Captured frames :&ensp;</label>
                     <select id="frames_dir" name="frames_dir" class="form-control">
                         {% for frames_dir in frames_dirs %}
-                            <option value={{frames_dir}}  {{ 'selected' if frames_dir == selected_dir else '' }}>{{frames_dir}}</option>
+                            {% if frames_dir|length > 0 %}
+                                <option value={{frames_dir}}  {{ 'selected' if frames_dir == selected_dir else '' }}>{{frames_dir}}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
