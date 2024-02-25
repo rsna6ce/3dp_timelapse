@@ -22,7 +22,7 @@
   * google chrome for windows
   * google chrome for android
 
-## Setup environmen
+## Setup environment
 ### add video group permission  
 (reconnect the terminal to reflect the settings)
 ```
