@@ -54,6 +54,26 @@ def video():
         selected_file = selected_file,
         encode_frame_rate = inner_status.encode_frame_rate)
 
+@app.route('/video/preview', methods=['GET'])
+def video_preview():
+    web_ui_path = app.config['web_ui_path']
+    frames_path = web_ui_path + '/../captured/frames/' + request.args['dir'] + '/'
+    files = os.listdir(frames_path)
+    files.sort()
+    file_count = len(files)
+    offset = int(request.args.get('offset', 1))
+    if file_count > 0:
+        offset = min(offset, file_count)
+        filename = files[-offset]
+        with open(frames_path + filename, 'rb') as f:
+            response = make_response(f.read())
+            response.headers.set('Content-Type', 'image/jpeg')
+            response.headers.set('Accept-Ranges', 'bytes')
+            response.headers.set('Cache-Control', 'public, max-age=60')
+            return response
+    else:
+        return ""
+
 @app.route('/encode/trigger', methods=['POST'])
 def encode_trigger():
     frames_dir = request.form.get('frames_dir','')

@@ -7,13 +7,22 @@
             <div class="row" style="padding:10px;">
                 <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                     <label class="label">Captured frames :&ensp;</label>
-                    <select id="frames_dir" name="frames_dir" class="form-control">
+                    <select id="frames_dir" name="frames_dir" class="form-control" onchange="preview_video();">
                         {% for frames_dir in frames_dirs %}
                             {% if frames_dir|length > 0 %}
                                 <option value={{frames_dir}}  {{ 'selected' if frames_dir == selected_dir else '' }}>{{frames_dir}}</option>
                             {% endif %}
                         {% endfor %}
                     </select>
+                </div>
+            </div>
+            <div class="row" style="padding:20px;padding-top:0px;padding-bottom:0px">
+                <img id="video_preview" src="" width="480" align="left">
+            </div>
+            <div class="row" style="padding:20px;padding-top:5px">
+                <div class="col-12" style="padding:0px;">
+                <input class="form-input" type="number" id="video_preview_offset" style="width:70px;" min="1" value="1" onchange="preview_video();">
+                <label class="label">&ensp;offset</label>
                 </div>
             </div>
             <div class="row" style="padding:10px;">
@@ -80,6 +89,11 @@
     </div>
 </div>
 <script language="javascript" type="text/javascript">
+    function preview_video() {
+        var frames_dir = document.getElementById('frames_dir').value;
+        var offset = document.getElementById('video_preview_offset').value;
+        document.getElementById('video_preview').src = "{{url_for('video_preview')}}" + "?dir="+ frames_dir + "&offset=" +offset;
+    }
     function confirm_trigger(msg) {
         let result = window.confirm(msg + 'OK ?');
         return result;
@@ -118,6 +132,9 @@
     }
     function load() {
       UpdateStatusPoling();
+      if ("{{selected_dir}}"!="") {
+        preview_video();
+      }
     }
     window.onload = load;
 </script>

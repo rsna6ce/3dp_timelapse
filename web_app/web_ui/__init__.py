@@ -17,6 +17,7 @@ web_ui_path = os.path.dirname(os.path.abspath(__file__))
 param_json = web_ui_path + '/param.json'
 with open(param_json, mode = 'r', encoding = 'utf-8') as f:
     param = json.load(f)
+app.config["web_ui_path"] = web_ui_path
 
 from web_ui.models import status
 inner_status = status.Status()
