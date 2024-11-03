@@ -18,6 +18,9 @@ while True:
         if message == 'shutdown now':
             print('shutdown')
             subprocess.run(('/usr/sbin/shutdown' ,'now'))
+        elif message == 'reboot now':
+            print('reboot')
+            subprocess.run(('/usr/sbin/reboot' ,'now'))
     except KeyboardInterrupt:
         sock.close()
         break
