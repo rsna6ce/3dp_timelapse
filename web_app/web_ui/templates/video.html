@@ -97,7 +97,7 @@
         var words = innerText.split(" ");
         var count = words[2].replace(")","");
         document.getElementById('video_preview_offset').value = count;
-        preview_video();
+        preview_video(false);
     }
     function preview_video(reset) {
         if (reset) {
@@ -146,7 +146,7 @@
     function load() {
       UpdateStatusPoling();
       if ("{{selected_dir}}"!="") {
-        preview_video();
+        preview_video(true);
       }
     }
     window.onload = load;

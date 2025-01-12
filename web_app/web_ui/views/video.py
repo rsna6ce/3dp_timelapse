@@ -29,9 +29,9 @@ def video():
             file_count = len(os.listdir(frames_path))
             if file_count > 0:
                 frames_dirs[i] = '{} (count: {})'.format(frames_dir, file_count)
+                selected_dir = frames_dirs[i] # latest dir with file exist.
             else:
                 frames_dirs[i] = ''
-        selected_dir = frames_dirs[-1]
 
     if param['video_dir']=='{DEFAULT}':
         video_basedir=web_ui_path + '/../captured/videos'
