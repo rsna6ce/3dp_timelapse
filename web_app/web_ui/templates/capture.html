@@ -12,7 +12,8 @@
                 <div class="col-12" style="padding:10px;padding-top:0px;padding-bottom:0px;">
                     <label class="label" id="capture_started_datetime">Started:</label> <br>
                     <label class="label" id="capture_count">Capture count:</label> <br>
-                    <label class="label" id="motion_score">Motion_score:</label>
+                    <label class="label" id="motion_score">Motion_score:</label> <br>
+                    <label class="label" id="latest_capture">Latest_capture:</label>
                 </div>
             </div>
             <hr>
@@ -79,6 +80,7 @@
             document.getElementById("capture_started_datetime").innerHTML = "Started: " + data.capture_started_datetime;
             document.getElementById("capture_count").innerHTML = "Capture count: " + data.capture_count;
             document.getElementById("motion_score").innerHTML = "Motion score: " + (Math.round(data.capture_motion_score * 100000) / 100000).toFixed(5);
+            document.getElementById("latest_capture").innerHTML = "Latest capture: " + data.latest_capture;
             setTimeout(UpdateStatusPoling, 1000);
         };
         request.onerror = function () {

@@ -36,7 +36,8 @@ def capture_status():
         'capture_running' : inner_status.capture_running,
         'capture_started_datetime' : inner_status.capture_started_datetime.strftime('%Y/%m/%d-%H:%M:%S') if inner_status.capture_running else '',
         'capture_count' : inner_status.capture_count,
-        'capture_motion_score': inner_status.capture_motion_score})
+        'capture_motion_score': inner_status.capture_motion_score,
+        'latest_capture' : inner_status.latest_capture})
 
 @app.route("/video_feed")
 def video_feed():
@@ -76,6 +77,7 @@ def capture_trigger():
         inner_status.capture_autostop_no_motion = (autostop_no_motion_enable=='on')
         inner_status.capture_motion_score = 0.0
         inner_status.captuure_first_motion_waiting = (autostop_no_motion_enable=='on')
+        inner_status.latest_capture = ''
     else:
         inner_status.capture_running = False
         inner_status.capture_job_name = ''
@@ -87,6 +89,7 @@ def capture_trigger():
         inner_status.capture_count = 0
         inner_status.capture_motion_score = 0.0
         inner_status.captuure_first_motion_waiting = False
+        inner_status.latest_capture = ''
 
     inner_status.capture_running = capture_running
     return redirect(url_for('capture'))
@@ -121,6 +124,7 @@ class CaptureThread(threading.Thread):
                             inner_status.capture_job_dir, str(inner_status.capture_count).zfill(8), 'jpg'), "wb") as f:
                             f.write(frame)
                         inner_status.capture_count += 1
+                        inner_status.latest_capture = dt_now.strftime('%X')
 
                     # auto stop no motion
                     if inner_status.capture_autostop_no_motion:

@@ -17,3 +17,4 @@ class Status():
         self.encode_job_name = ''
         self.encode_job_framerate = 0
         self.encode_framerate = 10
+        self.latest_capture = ''
