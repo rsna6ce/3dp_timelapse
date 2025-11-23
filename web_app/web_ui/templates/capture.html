@@ -24,6 +24,15 @@
                     <div class="form-inline">
                         <input {{start_enable}} class="form-input" type="number" id="capture_interval_sec" name="capture_interval_sec" style="width:70px;" min="5" value="{{capture_interval_sec}}">
                         <label class="label">&ensp;sec</label>
+                        {% if start_enable == '' %}
+                        <span class="ml-3 text-muted small">
+                            (set 
+                            <a href="javascript:void(0)" class="preset-interval text-primary" data-val="10">10</a>,
+                            <a href="javascript:void(0)" class="preset-interval text-primary" data-val="15">15</a>,
+                            <a href="javascript:void(0)" class="preset-interval text-primary" data-val="30">30</a>,
+                            <a href="javascript:void(0)" class="preset-interval text-primary" data-val="60">60</a>)
+                        </span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -93,6 +102,17 @@
       UpdateStatusPoling();
     }
     window.onload = load;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.preset-interval').forEach(function(el) {
+            el.addEventListener('click', function() {
+                const input = document.getElementById('capture_interval_sec');
+                if (input.disabled) return;
+                const val = this.getAttribute('data-val');
+                input.value = val;
+            });
+        });
+    });
 </script>
 
 {% endblock %}
