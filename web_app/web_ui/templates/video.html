@@ -22,7 +22,10 @@
             <div class="row" style="padding:20px;padding-top:5px">
                 <div class="col-12" style="padding:0px;">
                 <input class="form-input" type="number" id="video_preview_offset" style="width:70px;" min="1" value="1" onchange="preview_video(false);">
-                <label class="label" onclick="set_start_frame();">&ensp;offset (click here, set start frame)</label>
+                <label class="label">&ensp;offset </label>
+                <span class="text-muted small">
+                    (<a href="javascript:void(0)" onclick="set_start_frame(); preview_video(false);" class="text-primary">set start frame</a>)
+                </span>
                 </div>
             </div>
             <div class="row" style="padding:10px;">
